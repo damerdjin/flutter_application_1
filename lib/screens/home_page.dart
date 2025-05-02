@@ -55,12 +55,8 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return TransactionForm(
-              onAddTransaction: _ajouterTransaction,
-            );
-          },
+        return TransactionForm(
+          onAddTransaction: _ajouterTransaction,
         );
       },
     );
