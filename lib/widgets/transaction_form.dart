@@ -39,10 +39,20 @@ class _TransactionFormState extends State<TransactionForm> {
     super.dispose();
   }
 
+  // Modifiez la méthode _soumettreFormulaire pour inclure la validation de la description
   void _soumettreFormulaire() {
     if (_formKey.currentState!.validate()) {
       final montant = double.parse(_montantController.text.replaceAll(',', '.'));
       final titre = _categorie;
+      if (_descriptionController.text.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Veuillez entrer une description'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       widget.onAddTransaction(titre, montant, !_estDepense);
       Navigator.of(context).pop();
     }
@@ -200,9 +210,9 @@ class _TransactionFormState extends State<TransactionForm> {
                 onTap: () async {
                   final DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: _dateSelectionnee,
+                    initialDate: DateTime.now(),
                     firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
+                    lastDate: DateTime.now(), // Limite la sélection à aujourd'hui
                   );
                   if (pickedDate != null) {
                     setState(() {
@@ -249,9 +259,16 @@ class _TransactionFormState extends State<TransactionForm> {
                       borderSide: BorderSide.none,
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                    errorText: _descriptionController.text.trim().isEmpty ? 'Veuillez entrer une description' : null,
                   ),
                   maxLines: 3,
                   minLines: 1,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Veuillez entrer une description';
+                    }
+                    return null;
+                  },
                 ),
               ),
               
