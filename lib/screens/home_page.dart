@@ -69,10 +69,23 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color(0xFFF5F5F7),
       appBar: AppBar(
-        title: const Text('FinTrack'),
+        title: const Text(
+          'FinTrack',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.nightlight_round),
+            onPressed: () {
+              // Fonctionnalité future pour le mode sombre
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -84,12 +97,33 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
           ),
           
           // Onglets pour les transactions
-          TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Toutes'),
-              Tab(text: 'Récentes'),
-            ],
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withAlpha(26), // Remplacé withOpacity(0.1) par withAlpha(26)
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: TabBar(
+              controller: _tabController,
+              labelColor: Colors.deepPurple,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.deepPurple,
+              tabs: const [
+                Tab(
+                  icon: Icon(Icons.list_alt),
+                  text: 'Toutes',
+                ),
+                Tab(
+                  icon: Icon(Icons.access_time),
+                  text: 'Récentes',
+                ),
+              ],
+            ),
           ),
           
           // Liste des transactions
@@ -115,8 +149,10 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
       floatingActionButton: FloatingActionButton(
         onPressed: _afficherDialogueAjoutTransaction,
         backgroundColor: Colors.deepPurple,
-        child: const Icon(Icons.add, color: Colors.white),
+        elevation: 4,
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

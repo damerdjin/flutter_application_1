@@ -21,14 +21,32 @@ class _TransactionFormState extends State<TransactionForm> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Nouvelle transaction'),
+      title: Row(
+        children: [
+          Icon(
+            Icons.add_circle,
+            color: Colors.deepPurple,
+          ),
+          SizedBox(width: 8),
+          Text('Nouvelle transaction'),
+        ],
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       content: Form(
         key: formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Titre'),
+              decoration: InputDecoration(
+                labelText: 'Titre',
+                prefixIcon: Icon(Icons.title),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Veuillez entrer un titre';

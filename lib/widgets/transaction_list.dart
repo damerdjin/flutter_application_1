@@ -54,36 +54,64 @@ class TransactionList extends StatelessWidget {
 
     return ListView.builder(
       itemCount: displayTransactions.length,
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemBuilder: (context, index) {
         final transaction = recentOnly
             ? displayTransactions[displayTransactions.length - 1 - index]
             : displayTransactions[index];
         
-        return ListTile(
-          leading: CircleAvatar(
-            backgroundColor: transaction.estRevenu
-                ? Colors.green[100]
-                : Colors.red[100],
-            child: Icon(
-              transaction.estRevenu
-                  ? Icons.arrow_upward
-                  : Icons.arrow_downward,
-              color: transaction.estRevenu
-                  ? Colors.green
-                  : Colors.red,
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            leading: CircleAvatar(
+              backgroundColor: transaction.estRevenu
+                  ? Colors.green[50]
+                  : Colors.red[50],
+              child: Icon(
+                transaction.estRevenu
+                    ? Icons.arrow_upward
+                    : Icons.arrow_downward,
+                color: transaction.estRevenu
+                    ? Colors.green
+                    : Colors.red,
+              ),
             ),
-          ),
-          title: Text(transaction.titre),
-          subtitle: Text(
-            '${transaction.date.day}/${transaction.date.month}/${transaction.date.year}',
-          ),
-          trailing: Text(
-            '${transaction.estRevenu ? '+' : '-'}${transaction.montant.toStringAsFixed(2)} €',
-            style: TextStyle(
-              color: transaction.estRevenu
-                  ? Colors.green
-                  : Colors.red,
-              fontWeight: FontWeight.bold,
+            title: Text(
+              transaction.titre,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  size: 12,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${transaction.date.day}/${transaction.date.month}/${transaction.date.year}',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+            trailing: Text(
+              '${transaction.estRevenu ? '+' : '-'}${transaction.montant.toStringAsFixed(2)} €',
+              style: TextStyle(
+                color: transaction.estRevenu
+                    ? Colors.green
+                    : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
           ),
         );
