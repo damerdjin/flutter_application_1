@@ -30,13 +30,14 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
     super.dispose();
   }
 
-  void _ajouterTransaction(String titre, double montant, bool estRevenu) {
+  void _ajouterTransaction(String titre, double montant, bool estRevenu, String description) {
     setState(() {
       final transaction = Transaction(
         titre: titre,
         montant: montant,
         date: DateTime.now(),
         estRevenu: estRevenu,
+        description: description, // Ajout de la description
       );
       
       transactions.add(transaction);

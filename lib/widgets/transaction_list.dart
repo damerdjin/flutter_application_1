@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/transaction.dart';
+import './transaction_detail_dialog.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -13,43 +14,8 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (transactions.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.receipt_long,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              recentOnly ? 'Aucune transaction récente' : 'Aucune transaction',
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            if (!recentOnly)
-              const SizedBox(height: 8),
-            if (!recentOnly)
-              const Text(
-                'Appuyez sur + pour ajouter une nouvelle transaction',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-          ],
-        ),
-      );
-    }
-
     final displayTransactions = recentOnly
-        ? transactions.length > 5
-            ? transactions.sublist(transactions.length - 5)
-            : transactions
+        ? transactions.take(5).toList()
         : transactions;
 
     return ListView.builder(
@@ -66,51 +32,34 @@ class TransactionList extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            leading: CircleAvatar(
-              backgroundColor: transaction.estRevenu
-                  ? Colors.green[50]
-                  : Colors.red[50],
-              child: Icon(
-                transaction.estRevenu
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward,
-                color: transaction.estRevenu
-                    ? Colors.green
-                    : Colors.red,
-              ),
-            ),
-            title: Text(
-              transaction.titre,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  size: 12,
-                  color: Colors.grey[600],
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => TransactionDetailDialog(
+                  transaction: transaction,
+                  onUpdate: (updatedTransaction) {
+                    // Implémentation future de la mise à jour
+                  },
                 ),
-                const SizedBox(width: 4),
-                Text(
-                  '${transaction.date.day}/${transaction.date.month}/${transaction.date.year}',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
+              );
+            },
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: transaction.estRevenu ? Colors.green[100] : Colors.red[100],
+                child: Icon(
+                  transaction.estRevenu ? Icons.arrow_upward : Icons.arrow_downward,
+                  color: transaction.estRevenu ? Colors.green : Colors.red,
                 ),
-              ],
-            ),
-            trailing: Text(
-              '${transaction.estRevenu ? '+' : '-'}${transaction.montant.toStringAsFixed(2)} €',
-              style: TextStyle(
-                color: transaction.estRevenu
-                    ? Colors.green
-                    : Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+              ),
+              title: Text(transaction.titre),
+              subtitle: Text(transaction.description),
+              trailing: Text(
+                '${transaction.montant.toStringAsFixed(2)} €',
+                style: TextStyle(
+                  color: transaction.estRevenu ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

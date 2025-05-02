@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
-  final Function(String, double, bool) onAddTransaction;
+  final Function(String, double, bool, String) onAddTransaction;
 
   const TransactionForm({
     super.key,
@@ -39,7 +39,6 @@ class _TransactionFormState extends State<TransactionForm> {
     super.dispose();
   }
 
-  // Modifiez la méthode _soumettreFormulaire pour inclure la validation de la description
   void _soumettreFormulaire() {
     if (_formKey.currentState!.validate()) {
       final montant = double.parse(_montantController.text.replaceAll(',', '.'));
@@ -53,7 +52,7 @@ class _TransactionFormState extends State<TransactionForm> {
         );
         return;
       }
-      widget.onAddTransaction(titre, montant, !_estDepense);
+      widget.onAddTransaction(titre, montant, !_estDepense, _descriptionController.text);
       Navigator.of(context).pop();
     }
   }
