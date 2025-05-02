@@ -30,24 +30,17 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
     super.dispose();
   }
 
-  void _ajouterTransaction(String titre, double montant, bool estRevenu, String description) {
+  // Modifier cette méthode pour accepter un objet Transaction
+  void _ajouterTransaction(Transaction transaction) {
     setState(() {
-      final transaction = Transaction(
-        titre: titre,
-        montant: montant,
-        date: DateTime.now(),
-        estRevenu: estRevenu,
-        description: description, // Ajout de la description
-      );
-      
       transactions.add(transaction);
       
-      if (estRevenu) {
-        revenus += montant;
-        soldeActuel += montant;
+      if (transaction.estRevenu) {
+        revenus += transaction.montant;
+        soldeActuel += transaction.montant;
       } else {
-        depenses += montant;
-        soldeActuel -= montant;
+        depenses += transaction.montant;
+        soldeActuel -= transaction.montant;
       }
     });
   }
@@ -56,8 +49,47 @@ class _FinTrackHomePageState extends State<FinTrackHomePage> with SingleTickerPr
     showDialog(
       context: context,
       builder: (context) {
-        return TransactionForm(
-          onAddTransaction: _ajouterTransaction,
+        return Dialog(
+          insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // En-tête avec bouton de fermeture
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const Text(
+                      'Ajouter une transaction',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 40),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                
+                // Formulaire de transaction
+                TransactionForm(
+                  onAddTransaction: (transaction) {
+                    _ajouterTransaction(transaction);
+                    Navigator.of(context).pop(); // Ferme la boîte de dialogue après l'ajout
+                  },
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
